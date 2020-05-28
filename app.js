@@ -1,12 +1,11 @@
 const file = require("./router/file");
-
 const express = require("express");
 const bodyParser = require("body-parser");
-
 const mongoose = require("mongoose");
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' })
 const cors = require("cors");
 require('dotenv').config();
-
 const app = express();
 
 app.use(cors());
@@ -32,5 +31,5 @@ app.listen(process.env.PORT || process.env.port || 5000, () => {
 
 app.get("/file", file.getFile);
 app.get("/files", file.getAllFiles);
-app.post("/file", file.postFile);
+app.post("/file", upload.single('file'), file.postFile);
 app.delete("/file", file.deleteFile);
