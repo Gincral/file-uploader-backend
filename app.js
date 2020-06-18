@@ -11,7 +11,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use((req, res, next) => { next(); });
+app.use((req, res, next) => { 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next(); 
+});
 
 if (process.env.LOCAL === 'true') {
     mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME}`, (err) => {
