@@ -2,19 +2,33 @@ const file = require("./router/file");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const multer  = require('multer');
+const multer = require('multer');
 const upload = multer({ dest: 'uploads/' })
-const cors = require("cors");
+// const cors = require("cors");
 require('dotenv').config();
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use((req, res, next) => { 
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.set('Access-Control-Allow-Origin', '*');
-    next(); 
+app.use((req, res, next) => {
+
+    var origin = req.headers.origin;
+    if (_.contains(app.get('allowed_origins'), origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    } else {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+    }
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
 });
 
 if (process.env.LOCAL === 'true') {
